@@ -61,8 +61,7 @@ jobs:
         run: |
           python - << 'EOF'
           import json
-          # threshold = float("${{ vars.F1_GATE_THRESHOLD }}")
-          threshold = 0.70
+          threshold = float("${{ vars.F1_GATE_THRESHOLD }}")
           with open("reports/metrics.json", "r", encoding="utf-8") as f:
               metrics = json.load(f)
           f1 = float(metrics.get("f1", 0.0))
@@ -105,7 +104,7 @@ jobs:
           echo "=== Phase CD (simulée) ==="
           echo "ENV               : ${{ vars.APP_ENV }}"
           echo "F1 gate           : ${{ vars.F1_GATE_THRESHOLD }}"
-          echo "Secret (demo)     : ${{ vars.MLOPSLAB }}"
+          echo "Secret (demo)     : ${{ secrets.DEMO_SECRET }}"
           echo
           echo "Artefacts prêts :"
           ls -R release_artifacts
