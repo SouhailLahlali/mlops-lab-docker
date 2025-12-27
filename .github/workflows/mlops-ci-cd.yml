@@ -61,15 +61,25 @@ jobs:
         run: |
           python - << 'EOF'
           import json
-          threshold = float("${{ vars.F1_GATE_THRESHOLD }}")
+          import os
+
+          # Read F1 threshold from environment variable (GitHub variable)
+          threshold = float(os.environ.get("F1_GATE_THRESHOLD", 0.0))
+
+          # Load metrics
           with open("reports/metrics.json", "r", encoding="utf-8") as f:
               metrics = json.load(f)
+
           f1 = float(metrics.get("f1", 0.0))
           print(f"F1={f1} | seuil={threshold}")
+
           if f1 < threshold:
               raise SystemExit("Quality Gate échoué : F1 insuffisante")
+
           print("Quality Gate validé")
           EOF
+        env:
+          F1_GATE_THRESHOLD: ${{ vars.F1_GATE_THRESHOLD }}
 
 
       - name: Upload artefacts ML
